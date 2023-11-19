@@ -1,0 +1,29 @@
+---
+name: CI
+on:
+  pull_request:
+  push:
+    branches:
+      - "*"
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: taiki-e/install-action@just
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: stable
+          components: clippy rustfmt
+
+      - name: Install nextest
+        uses: taiki-e/install-action@nextest
+
+      - name: Linting
+        run: just lint
+
+      - name: Tests
+        run: just test
+
+      - name: Debug builds
+        run: just build
